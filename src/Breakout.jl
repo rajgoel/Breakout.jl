@@ -9,13 +9,13 @@ module Breakout
 using FileIO, Images, Colors, SimpleDirectMediaLayer, CommonRLInterface                      
 
 # Include all game files
-include("game.jl")
-include("draw.jl")
-include("flatten.jl")
+include("core/game.jl")
+include("core/draw.jl")
+include("core/flatten.jl")
 include("control/keyboard.jl")
 include("control/heuristic.jl")
 include("control/random.jl")
-include("renderer.jl")
+include("core/renderer.jl")
 include("interface.jl")
 
 # Export main functions that external code needs
