@@ -4,11 +4,10 @@ A simple Breakout clone for fun and reinforcement learning on internal game stat
 
 ## Features
 
-- **Interactive gameplay** with keyboard controls (Arrow keys or WASD)
-- **Reinforcement Learning interface** compatible with CommonRLInterface.jl
-- **Customizable game speed** and auto-restart functionality
-- **Built-in control strategies** (heuristic, random, keyboard)
-- **Screenshot capabilities** for reinforcement learning on gray images.
+- Interactive gameplay with keyboard control (← and →).
+- Automatic gameplay with heuristic control.
+- CommonRLInterface for learning on internal game state.
+- Optional game state to gray image conversion.
 
 ## Installation
 
@@ -33,7 +32,7 @@ breakout(Breakout.get_heuristic_action, speed=nothing)
 
 ### Custom control
 
-To create a self-trained controller, check out the controller implementations in the `control/` folder.
+To create a custom controller, check out the controller implementations in the `control/` folder.
 
 ## API Reference
 
