@@ -27,7 +27,7 @@ breakout()
 ### Heuristic control
 ```julia
 using Breakout
-breakout(Breakout.get_heuristic_action, speed=nothing)
+breakout(Breakout.heuristic_action, speed=nothing)
 ```
 
 ### Custom control

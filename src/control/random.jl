@@ -15,7 +15,7 @@ end
 const agent = RandomAgent(0.1)
 
 """
-    get_random_action(game_state) -> Int
+    random_action(game_state) -> Int
 
 Get paddle movement action using random movement strategy.
 
@@ -30,7 +30,7 @@ rather than completely random actions each frame.
 - `1`: Move paddle right  
 - `0`: No movement
 """
-function get_random_action(game_state)
+function random_action(game_state)
     # Probabilistically change movement direction
     if rand() < agent.change_probability
         agent.current_direction = rand([-1, 0, 1])

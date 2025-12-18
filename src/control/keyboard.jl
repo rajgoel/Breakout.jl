@@ -33,7 +33,7 @@ function update_keyboard_state()
 end
 
 """
-    get_keyboard_action(game_state) -> Int
+    keyboard_action(game_state) -> Int
 
 Get paddle movement action from keyboard input.
 
@@ -45,7 +45,7 @@ Get paddle movement action from keyboard input.
 - `1`: Move paddle right (RIGHT arrow or D key)  
 - `0`: No movement
 """
-function get_keyboard_action(game_state)
+function keyboard_action(game_state)
     update_keyboard_state()
     
     if keyboard_state.left

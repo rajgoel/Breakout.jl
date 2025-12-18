@@ -48,13 +48,13 @@ breakout()
 Run with heuristic control and max speed:
 ```
 using Breakout
-breakout(Breakout.get_heuristic_action, speed=nothing)
+breakout(Breakout.heuristic_action, speed=nothing)
 ```
 """
 function breakout(control_func=nothing; autorestart=true, speed=2.0, max_steps=nothing, game_counter=1)
     println("🎮 Starting Breakout, press ESC to stop.")
     if control_func === nothing
-        get_control_action = get_keyboard_action
+        get_control_action = keyboard_action
     else
         get_control_action = control_func
     end
