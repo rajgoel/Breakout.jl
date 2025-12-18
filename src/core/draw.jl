@@ -109,25 +109,28 @@ function draw_score(pixel_callback, score_value, x, y, scale=2, spacing=4)
 end
 
 """
-    draw_game(game_state, draw_pixel, current_game)
+    draw_game(game_state, draw_pixel, game_counter)
 
 Draw the complete game state using the provided pixel drawing function.
 
 # Arguments
-- `game_state`: Current game state tuple (score, ball_cx, ball_cy, ball_vx, ball_vy, paddle_cx, bricks)
+- `game_state`: Current game state struct
 - `draw_pixel(x, y, color)`: Callback function to draw a pixel at (x,y) with given color
-- `current_game`: Current game counter to display
+- `game_counter`: Current game counter to display
 
 The color parameter format depends on the target:
 - For SDL: (r, g, b, a) as UInt8 values 0-255
 - For screenshots: grayscale Float64 value 0.0-1.0
 """
-function draw_game(game_state, draw_pixel, current_game)
-    score, ball_cx, ball_cy, ball_vx, ball_vy, paddle_cx, bricks = game_state
+function draw_game(game_state::GameState, draw_pixel, game_counter)
+    # Extract values from GameState struct
+    ball_cx = game_state.ball.x + BALL_SIZE/2
+    ball_cy = game_state.ball.y + BALL_SIZE/2
+    paddle_cx = game_state.paddle.x + game_state.paddle.w/2
     
     # Draw score digits (centered in left half)
-    score_x_start = GAME_WIDTH ÷ 4 - length(string(score)) * 2
-    draw_score(score, score_x_start, 6, 2, 4) do px, py
+    score_x_start = GAME_WIDTH ÷ 4 - length(string(game_state.score)) * 2
+    draw_score(game_state.score, score_x_start, 6, 2, 4) do px, py
         if px >= 1 && px <= GAME_WIDTH && py >= 1 && py <= GAME_HEIGHT
             draw_pixel(px, py, (128, 128, 128, 255))  # Gray color for score
         end
@@ -135,7 +138,7 @@ function draw_game(game_state, draw_pixel, current_game)
     
     # Draw game counter (centered in right half) with '#' prefix
     hash_width = 5 * 2  # 5x5 pattern with scale=2
-    number_width = length(string(current_game)) * 4 * 2  # digits with scale=2 and spacing=4
+    number_width = length(string(game_counter)) * 4 * 2  # digits with scale=2 and spacing=4
     total_width = hash_width + 2 + number_width  # hash + gap + number
     game_counter_x_start = 3 * GAME_WIDTH ÷ 4 - total_width ÷ 2
     
@@ -148,7 +151,7 @@ function draw_game(game_state, draw_pixel, current_game)
     
     # Draw the number after the '#' symbol
     number_x_start = game_counter_x_start + hash_width + 2
-    draw_score(current_game, number_x_start, 6, 2, 4) do px, py
+    draw_score(game_counter, number_x_start, 6, 2, 4) do px, py
         if px >= 1 && px <= GAME_WIDTH && py >= 1 && py <= GAME_HEIGHT
             draw_pixel(px, py, (128, 128, 128, 255))  # Gray color for game counter
         end
@@ -180,7 +183,7 @@ function draw_game(game_state, draw_pixel, current_game)
     end
     
     # Draw bricks
-    for brick in bricks
+    for brick in game_state.bricks
         color = brick.color
         r = round(UInt8, color.r * 255)
         g = round(UInt8, color.g * 255)

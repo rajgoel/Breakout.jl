@@ -6,7 +6,7 @@ Provides one-hot encoding for brick positions.
 """
 
 """
-    flatten(game_state) -> Vector{Float32}
+    flatten(game_state::GameState) -> Vector{Float32}
 
 Convert game state to flattened vector suitable for neural network input.
 
@@ -15,13 +15,18 @@ Creates a feature vector with:
 - 5 continuous features: ball position/velocity, paddle position
 
 # Arguments
-- `game_state`: Tuple from get_state() containing (score, ball_cx, ball_cy, ball_vx, ball_vy, paddle_cx, bricks)
+- `game_state`: GameState struct containing game information
 
 # Returns
 Vector{Float32} with raw features totaling ROWS * COLUMNS + 5 elements
 """
-function flatten(game_state)
-    score, ball_cx, ball_cy, ball_vx, ball_vy, paddle_cx, bricks = game_state
+function flatten(game_state::GameState)
+    # Extract values from GameState struct
+    ball_cx = game_state.ball.x + BALL_SIZE/2
+    ball_cy = game_state.ball.y + BALL_SIZE/2
+    ball_vx = game_state.ball_vel[1]
+    ball_vy = game_state.ball_vel[2]
+    paddle_cx = game_state.paddle.x + game_state.paddle.w/2
     
     # Create output vector with correct size
     grid_size = ROWS * COLS
@@ -38,7 +43,7 @@ function flatten(game_state)
     
     Δ = 6
     # One-hot encoding for each brick position
-    for brick in bricks
+    for brick in game_state.bricks
         # Convert to 0-based grid coordinates
         col = Int((brick.rect.x - WALL_THICKNESS) ÷ BRICK_WIDTH)
         row = Int((brick.rect.y - (SCORE_AREA_HEIGHT + WALL_THICKNESS + 30)) ÷ BRICK_HEIGHT)

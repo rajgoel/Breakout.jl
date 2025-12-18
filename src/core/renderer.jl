@@ -91,7 +91,7 @@ SDL rendering, making it suitable for reinforcement learning agents and headless
 training environments.
 
 # Arguments
-- `game_state`: Tuple of (score, ball_cx, ball_cy, ball_vx, ball_vy, paddle_cx, bricks)
+- `game_state`: GameState struct containing game information
 
 # Returns
 - 2D array (GAME_HEIGHT × GAME_WIDTH) with grayscale values 0.0-1.0

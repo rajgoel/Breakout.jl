@@ -3,7 +3,7 @@ import CommonRLInterface as RL
 export BreakoutEnv
 
 mutable struct BreakoutEnv <: RL.AbstractEnv
-    game_state
+    game_state::Breakout.GameState
     game_over::Bool
     frame_skip::Int
     max_steps::Int
@@ -11,15 +11,15 @@ mutable struct BreakoutEnv <: RL.AbstractEnv
     flattened::Vector{Float32}
     
     function BreakoutEnv(; frame_skip=4, max_steps=20000)
-        env = new(nothing, false, frame_skip, max_steps, 0, Float32[])
+        game_state = Breakout.GameState()
+        env = new(game_state, false, frame_skip, max_steps, 0, Float32[])
         RL.reset!(env)
         return env
     end
 end
 
 function RL.reset!(env::BreakoutEnv)
-    Breakout.reset(false)
-    env.game_state = Breakout.get_state()
+    Breakout.reset!(env.game_state, false)
     env.flattened = Breakout.flatten(env.game_state)
     env.game_over = false
     env.current_steps = 0
@@ -46,13 +46,12 @@ function RL.act!(env::BreakoutEnv, action)
             break
         end
         
-        env.game_over = !Breakout.update(action)
+        env.game_over = !Breakout.update!(env.game_state, action)
         if env.game_over
             break  # Stop if game ends mid-skip
         end
     end
     
-    env.game_state = Breakout.get_state()
     env.flattened = Breakout.flatten(env.game_state)
     reward = Float32(env.game_state.score - prev_score)
     return reward

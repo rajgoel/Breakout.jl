@@ -59,26 +59,25 @@ function breakout(control_func=nothing; autorestart=true, speed=2.0, max_steps=n
         get_control_action = control_func
     end
     
+    # Create game state instance for this play session
+    game_state = GameState()
+    
     # Create window and start game loop
     create_window()
     
     try
         # Reset game to initial state
-        reset()
+        reset!(game_state)
         
         # Main game loop
         running = true
         step_count = 0
-        current_game = game_counter
         if speed !== nothing
             target_frame_time = 1.0 / (60 * speed)
             last_frame_time = time()
         end
         
         while running
-            # Get current game state
-            game_state = get_state()
-            
             # Process events
             running = process_events(game_state)
             if !running
@@ -89,7 +88,7 @@ function breakout(control_func=nothing; autorestart=true, speed=2.0, max_steps=n
             action = get_control_action(game_state)
             
             # Update game
-            game_over = !update(action)
+            game_over = !update!(game_state, action)
             step_count += 1
             
             # Check step limit - treat as game over if max steps reached
@@ -99,16 +98,15 @@ function breakout(control_func=nothing; autorestart=true, speed=2.0, max_steps=n
             
             # Handle game over based on autorestart setting
             if game_over && autorestart
-                reset()
+                reset!(game_state)
                 step_count = 0  # Reset step counter for new game
-                current_game += 1  # Increment game counter
-                game_state = get_state()  # Get new state after reset
+                game_counter += 1  # Increment game counter
             elseif game_over && !autorestart
                 break  # Exit if game over and no autorestart
             end
             
             # Render current state
-            render_display(game_state, current_game)
+            render_display(game_state, game_counter)
             
             # Control frame rate based on elapsed time
             if speed !== nothing
