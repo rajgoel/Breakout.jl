@@ -37,7 +37,7 @@ function close_window()
     println("Window closed.")
 end
 
-function process_events(game_state=nothing)
+function window_events(game_state=nothing)
     event_ref = Ref{SDL_Event}()
     while Bool(SDL_PollEvent(event_ref))
         evt = event_ref[]

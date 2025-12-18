@@ -79,7 +79,7 @@ function breakout(control_func=nothing; autorestart=true, speed=2.0, max_steps=n
         
         while running
             # Process events
-            running = process_events(game_state)
+            running = window_events(game_state)
             if !running
                 break
             end

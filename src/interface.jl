@@ -4,15 +4,16 @@ export BreakoutEnv
 
 mutable struct BreakoutEnv <: RL.AbstractEnv
     game_state::Breakout.GameState
+    discrete::Bool
     game_over::Bool
     frame_skip::Int
     max_steps::Int
     current_steps::Int
     flattened::Vector{Float32}
     
-    function BreakoutEnv(; frame_skip=4, max_steps=20000)
+    function BreakoutEnv(; frame_skip=4, max_steps=20000, discrete=true)
         game_state = Breakout.GameState()
-        env = new(game_state, false, frame_skip, max_steps, 0, Float32[])
+        env = new(game_state, discrete, false, frame_skip, max_steps, 0, Float32[])
         RL.reset!(env)
         return env
     end
@@ -26,7 +27,11 @@ function RL.reset!(env::BreakoutEnv)
 end
 
 function RL.actions(env::BreakoutEnv)
-    return [-1, 0, 1]
+    if env.discrete
+          return [-1, 0, 1] # Array of valid actions
+    else
+          return (-1, 1) # Tuple: (min, max) range
+    end
 end
 
 function RL.observe(env::BreakoutEnv)
@@ -62,7 +67,13 @@ function RL.terminated(env::BreakoutEnv)
 end
 
 function get_action_mask(env::BreakoutEnv)
-    return Breakout.get_action_mask(env.game_state)
+    if env.discrete
+        # Convert continuous bounds to discrete boolean mask
+        min_action, max_action = Breakout.get_action_mask(env.game_state)
+        return [min_action <= -1.0, true, max_action >= 1.0]  # [can_left, can_stay, can_right]
+    else
+        return Breakout.get_action_mask(env.game_state)  # Return (min, max) interval
+    end
 end
 
 function open(env::BreakoutEnv)

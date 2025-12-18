@@ -60,8 +60,10 @@ mutable struct GameState
     end
 end
 
+"""
+Initialize game state with Atari-style brick layout and ball position
+"""
 function reset!(game_state::GameState, keep_score=false)
-    """Initialize game state with authentic Atari brick layout and ball position"""
     empty!(game_state.bricks)
     if !keep_score
         game_state.score = 0  # Reset score on game over
@@ -106,8 +108,10 @@ function reset!(game_state::GameState, keep_score=false)
     collide(game_state.ball, game_state.paddle)
 end
 
+"""
+Update ball position and handle collisions
+"""
 function update_step!(game_state::GameState)
-    """Update ball position and handle collisions"""
     vx, vy = game_state.ball_vel
     
     # Check for ball falling off bottom (game over)
@@ -172,8 +176,10 @@ function update_step!(game_state::GameState)
     return true  # Continue game
 end
 
+"""
+Update game with action - returns false on game over
+"""
 function update!(game_state::GameState, action)
-    """Update game with action - returns false on game over"""
     # Apply paddle movement
     paddle_speed = 1
     game_state.paddle.x += action * paddle_speed
@@ -189,12 +195,11 @@ function update!(game_state::GameState, action)
     return update_step!(game_state)
 end
 
+"""
+Get interval of valid continuous actions as (min_action, max_action)
+"""
 function get_action_mask(game_state::GameState)
-    """Get boolean mask for valid actions given current game state"""
-    # Actions: [-1, 0, 1] -> [move_left, stay, move_right]
     paddle_cx = game_state.paddle.x + game_state.paddle.w/2
-    can_move_left = paddle_cx - PADDLE_WIDTH/2 > WALL_THICKNESS + 1
-    can_move_right = paddle_cx + PADDLE_WIDTH/2 < GAME_WIDTH - WALL_THICKNESS + 1 
     
-    return [can_move_left, true, can_move_right]
+    return ( max(-1.0,WALL_THICKNESS + 1 - paddle_cx - PADDLE_WIDTH/2), min(1.0,GAME_WIDTH - WALL_THICKNESS - 1 - paddle_cx + PADDLE_WIDTH/2) )
 end
