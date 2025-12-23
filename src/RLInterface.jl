@@ -3,7 +3,7 @@ import CommonRLInterface as RL
 export BreakoutEnv
 
 """
-    BreakoutEnv(; frame_skip=4, max_steps=20000, discrete=true, representation=:full)
+    BreakoutEnv(representation=:full; frame_skip=4, max_steps=20000, discrete=true)
 
 Create a Breakout environment implementing CommonRLInterface.
 
@@ -26,7 +26,7 @@ mutable struct BreakoutEnv <: RL.AbstractEnv
     current_steps::Int
     representation::Symbol
     
-    function BreakoutEnv(; frame_skip=4, max_steps=20000, discrete=true, representation=:full)
+    function BreakoutEnv(representation=:full; frame_skip=4, max_steps=20000, discrete=true)
         game_state = Breakout.GameState()
         env = new(game_state, discrete, false, frame_skip, max_steps, 0, representation)
         RL.reset!(env)

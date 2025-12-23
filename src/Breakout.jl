@@ -22,7 +22,7 @@ include("RLInterface.jl")
 export breakout, BreakoutEnv
 
 """
-    breakout(control_func=nothing; autorestart=true, speed=1.0, max_steps=nothing)
+    breakout(control=keyboard_action; autorestart=true, speed=1.0, max_steps=nothing)
 
 Launch the Breakout game with the specified control function using SDL rendering.
 

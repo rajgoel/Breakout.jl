@@ -63,7 +63,7 @@ env = BreakoutEnv()
 state = RL.observe(env)  # Returns 89-element vector
 
 # Environment with minimal representation
-env = BreakoutEnv(representation=:minimal)
+env = BreakoutEnv(:minimal)
 state = RL.observe(env)  # Returns 2-element vector
 ```
 
