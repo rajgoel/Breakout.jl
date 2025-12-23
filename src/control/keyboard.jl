@@ -25,11 +25,9 @@ function update_keyboard_state()
     # Get current keyboard state from SDL
     keyboard_state_ptr = SDL_GetKeyboardState(C_NULL)
     
-    # Check arrow keys and WASD
-    keyboard_state.left = Bool(unsafe_load(keyboard_state_ptr, SDL_SCANCODE_LEFT + 1)) || 
-                         Bool(unsafe_load(keyboard_state_ptr, SDL_SCANCODE_A + 1))
-    keyboard_state.right = Bool(unsafe_load(keyboard_state_ptr, SDL_SCANCODE_RIGHT + 1)) || 
-                          Bool(unsafe_load(keyboard_state_ptr, SDL_SCANCODE_D + 1))
+    # Check arrow keys
+    keyboard_state.left = Bool(unsafe_load(keyboard_state_ptr, SDL_SCANCODE_LEFT + 1))
+    keyboard_state.right = Bool(unsafe_load(keyboard_state_ptr, SDL_SCANCODE_RIGHT + 1))
 end
 
 """
@@ -41,8 +39,8 @@ Get paddle movement action from keyboard input.
 - `game_state`: Current game state (ignored for keyboard input)
 
 # Returns
-- `-1`: Move paddle left (LEFT arrow or A key)
-- `1`: Move paddle right (RIGHT arrow or D key)  
+- `-1`: Move paddle left (LEFT arrow)
+- `1`: Move paddle right (RIGHT arrow)  
 - `0`: No movement
 """
 function keyboard_action(game_state::GameState)

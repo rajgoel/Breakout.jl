@@ -42,7 +42,9 @@ struct Brick
     points::Int
 end
 
-# Game state struct to replace global variables
+"""
+Struct representing the full game state
+"""
 mutable struct GameState
     score::Int
     ball::Rect
