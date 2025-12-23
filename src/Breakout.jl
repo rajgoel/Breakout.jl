@@ -16,7 +16,7 @@ include("control/keyboard.jl")
 include("control/heuristic.jl")
 include("control/random.jl")
 include("core/renderer.jl")
-include("interface.jl")
+include("RLInterface.jl")
 
 # Export main functions that external code needs
 export breakout, BreakoutEnv
@@ -27,14 +27,13 @@ export breakout, BreakoutEnv
 Launch the Breakout game with the specified control function using SDL rendering.
 
 # Arguments
-- `control_func`: Function that takes game state and returns action (-1, 0, 1)
-  - If nothing, uses default keyboard control
+- `control`: Function that takes game state and returns action (-1, 0, 1)
 - `autorestart`: Whether to automatically restart the game when ball falls off (default: true)
 - `speed`: Game speed multiplier (1.0 = 60fps, 2.0 = 120fps equivalent)
 - `max_steps`: Maximum number of steps before stopping (nothing = unlimited)
 
 # Controls
-- **Keyboard mode**: Arrow keys or WASD to move paddle, ESC to quit
+- **Keyboard mode**: Arrow keys to move paddle, ESC to quit
 - **Function mode**: AI/Agent plays automatically, ESC to quit
 
 # Usage
@@ -51,13 +50,8 @@ using Breakout
 breakout(Breakout.heuristic_action, speed=nothing)
 ```
 """
-function breakout(control_func=nothing; autorestart=true, speed=2.0, max_steps=nothing, game_counter=1)
+function breakout(control=keyboard_action; autorestart=true, speed=1.0, max_steps=nothing, game_counter=1)
     println("🎮 Starting Breakout, press ESC to stop.")
-    if control_func === nothing
-        get_control_action = keyboard_action
-    else
-        get_control_action = control_func
-    end
     
     # Create game state instance for this play session
     game_state = GameState()
@@ -73,7 +67,7 @@ function breakout(control_func=nothing; autorestart=true, speed=2.0, max_steps=n
         running = true
         step_count = 0
         if speed !== nothing
-            target_frame_time = 1.0 / (60 * speed)
+            target_frame_time = 1.0 / (120 * speed)
             last_frame_time = time()
         end
         
@@ -85,7 +79,7 @@ function breakout(control_func=nothing; autorestart=true, speed=2.0, max_steps=n
             end
             
             # Get action from control function
-            action = get_control_action(game_state)
+            action = control(game_state)
             
             # Update game
             game_over = !update!(game_state, action)
