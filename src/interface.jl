@@ -66,25 +66,3 @@ function RL.terminated(env::BreakoutEnv)
     return env.game_over
 end
 
-function get_action_mask(env::BreakoutEnv)
-    if env.discrete
-        # Convert continuous bounds to discrete boolean mask
-        min_action, max_action = Breakout.get_action_mask(env.game_state)
-        return [min_action <= -1.0, true, max_action >= 1.0]  # [can_left, can_stay, can_right]
-    else
-        return Breakout.get_action_mask(env.game_state)  # Return (min, max) interval
-    end
-end
-
-function open(env::BreakoutEnv)
-    Breakout.create_window()
-    Breakout.render_display(env.game_state, 1)  # Render initial state
-end
-
-function update(env::BreakoutEnv, episode=1)
-    Breakout.render_display(env.game_state, episode)
-end
-
-function close(env::BreakoutEnv)
-    Breakout.close_window()
-end
