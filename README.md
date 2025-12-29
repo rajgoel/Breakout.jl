@@ -20,7 +20,7 @@ Pkg.add(url="https://github.com/rajgoel/Breakout.jl")
 
 Breakout is a classic arcade game where the player controls a paddle to bounce a ball and break all the bricks on the screen. The objective is to clear all bricks without letting the ball fall past the paddle.
 
-![Breakout game](Breakout.apng)
+![Breakout game](Breakout.gif)
 
 This version features **6 rows of 14 bricks each**, with point values assigned by color:  
 
