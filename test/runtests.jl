@@ -9,6 +9,7 @@ import CommonRLInterface as RL
 
         while !RL.terminated(env)
             obs = RL.observe(env)
+            img = RL.render(env)
             action = rand(RL.valid_actions(env))
             reward = RL.act!(env, action)
         end
