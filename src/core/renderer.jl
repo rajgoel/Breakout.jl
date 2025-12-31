@@ -46,15 +46,6 @@ function window_events(game_state=nothing)
         elseif evt.type == SDL_KEYDOWN
             if evt.key.keysym.scancode == SDL_SCANCODE_ESCAPE
                 return false  # ESC key also stops
-            elseif evt.key.keysym.scancode == SDL_SCANCODE_P
-                # Take screenshot when P is pressed
-                if game_state !== nothing
-                    try
-                        save_screenshot_png(game_state)
-                    catch e
-                        println("Error saving screenshot: $e")
-                    end
-                end
             end
         end
     end
@@ -82,56 +73,31 @@ function render_display(game_state, current_game)
 end
 
 """
-    render_screenshot(game_state) -> Array{Float64, 2}
+    render_screenshot(game_state) -> Array{RGB, 2}
 
-Render game state as grayscale pixel array for headless gameplay and RL training.
+Render game state as color image for visualization.
 
 This function creates a visual representation of the game state without requiring 
-SDL rendering, making it suitable for reinforcement learning agents and headless 
-training environments.
+SDL rendering, making it suitable for display and visualization.
 
 # Arguments
 - `game_state`: GameState struct containing game information
 
 # Returns
-- 2D array (GAME_HEIGHT × GAME_WIDTH) with grayscale values 0.0-1.0
+- 2D array (GAME_HEIGHT × GAME_WIDTH) with RGB color values
 """
 function render_screenshot(game_state, current_game=1)
-    # Initialize empty game field
-    pixels = zeros(Float64, GAME_HEIGHT, GAME_WIDTH)
+    # Initialize empty game field with black background
+    pixels = fill(RGB(0.0, 0.0, 0.0), GAME_HEIGHT, GAME_WIDTH)
     
     # Use shared drawing function with pixel array callback
     draw_game(game_state, (x, y, color) -> begin
         if x >= 1 && x <= GAME_WIDTH && y >= 1 && y <= GAME_HEIGHT
-            # Convert RGBA color to grayscale using luminance formula
+            # Convert RGBA color to RGB
             r, g, b, a = color
-            gray_value = (0.299 * r + 0.587 * g + 0.114 * b) / 255.0
-            pixels[y, x] = gray_value
+            pixels[y, x] = RGB(r/255.0, g/255.0, b/255.0)
         end
     end, current_game)
     
     return pixels
 end
-
-"""
-    save_screenshot_png(game_state, filename="breakout_screenshot.png")
-
-Save a screenshot of the current game state as a PNG file.
-
-# Arguments
-- `game_state`: Current game state tuple
-- `filename`: Output filename (default: "breakout_screenshot.png")
-"""
-function save_screenshot_png(game_state, filename="breakout_screenshot.png")
-    # Get grayscale pixel array
-    pixels = render_screenshot(game_state)
-    
-    # Convert to 8-bit grayscale (0-255)
-    img_array = round.(UInt8, pixels * 255)
-    
-    # Save as PNG using Images.jl
-    save(filename, img_array)
-    
-    println("Screenshot saved: $filename")
-end
-
