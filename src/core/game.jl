@@ -1,9 +1,3 @@
-"""
-Core game logic for Breakout.
-
-Manages game state, physics, collisions, and scoring mechanics.
-"""
-
 using Colors
 
 # Game dimensions and layout
@@ -22,7 +16,9 @@ const PADDLE_WIDTH = 20
 const PADDLE_HEIGHT = 3
 const MAX_VX = 1.0  # Maximum vertical speed
 
-# Simple Rectangle struct for collision detection
+"""
+Rectangle struct for collision detection
+"""
 mutable struct Rect
     x::Float32
     y::Float32
@@ -30,16 +26,21 @@ mutable struct Rect
     h::Float32
 end
 
-# Collision detection for axis-aligned rectangles
-function collide(rect1::Rect, rect2::Rect)
-    return !((rect1.x + rect1.w) < rect2.x || rect1.x > (rect2.x + rect2.w) ||
-             (rect1.y + rect1.h) < rect2.y || rect1.y > (rect2.y + rect2.h))
-end
-
+"""
+Struct representing a brick in the game state
+"""
 struct Brick
     rect::Rect
     color
     points::Int
+end
+
+"""
+Collision detection for axis-aligned rectangles
+"""
+function collide(rect1::Rect, rect2::Rect)
+    return !((rect1.x + rect1.w) < rect2.x || rect1.x > (rect2.x + rect2.w) ||
+             (rect1.y + rect1.h) < rect2.y || rect1.y > (rect2.y + rect2.h))
 end
 
 """
@@ -61,6 +62,7 @@ mutable struct GameState
         new(score, ball, ball_vel, paddle, bricks)
     end
 end
+
 
 """
 Initialize game state with Atari-style brick layout and ball position

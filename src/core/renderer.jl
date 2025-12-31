@@ -10,6 +10,9 @@ const WINDOW_HEIGHT = GAME_HEIGHT * SCALE_FACTOR
 window = nothing
 renderer = nothing
 
+"""
+Create SDL window for game display.
+"""
 function create_window()
     global window, renderer
     @assert SDL_Init(SDL_INIT_EVERYTHING) == 0 "error initializing SDL: $(unsafe_string(SDL_GetError()))"
@@ -23,6 +26,9 @@ function create_window()
     println("Window created.")
 end
 
+"""
+Close SDL window and cleanup resources.
+"""
 function close_window()
     global window, renderer
     if renderer !== nothing
@@ -37,6 +43,9 @@ function close_window()
     println("Window closed.")
 end
 
+"""
+Process SDL window events to identify whether to stop game
+"""
 function window_events(game_state=nothing)
     event_ref = Ref{SDL_Event}()
     while Bool(SDL_PollEvent(event_ref))
@@ -52,7 +61,10 @@ function window_events(game_state=nothing)
     return true  # Continue
 end
 
-function render_display(game_state, current_game)
+"""
+Render game state to SDL window.
+"""
+function display(game_state, current_game)
     # 1. Clear the screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255)  # Black background
     SDL_RenderClear(renderer)
@@ -73,20 +85,9 @@ function render_display(game_state, current_game)
 end
 
 """
-    render_screenshot(game_state) -> Array{RGB, 2}
-
-Render game state as color image for visualization.
-
-This function creates a visual representation of the game state without requiring 
-SDL rendering, making it suitable for display and visualization.
-
-# Arguments
-- `game_state`: GameState struct containing game information
-
-# Returns
-- 2D array (GAME_HEIGHT × GAME_WIDTH) with RGB color values
+Render game state as RGB image array.
 """
-function render_screenshot(game_state, current_game=1)
+function render(game_state, current_game=1)
     # Initialize empty game field with black background
     pixels = fill(RGB(0.0, 0.0, 0.0), GAME_HEIGHT, GAME_WIDTH)
     

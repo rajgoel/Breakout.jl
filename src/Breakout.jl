@@ -29,7 +29,7 @@ Launch the Breakout game with the specified control function using SDL rendering
 # Arguments
 - `control`: Function that takes game state and returns action (-1, 0, 1)
 - `autorestart`: Whether to automatically restart the game when ball falls off (default: true)
-- `speed`: Game speed multiplier (1.0 = 60fps, 2.0 = 120fps equivalent)
+- `speed`: Game speed multiplier (1.0 = normal speed, 2.0 = double speed)
 - `max_steps`: Maximum number of steps before stopping (nothing = unlimited)
 
 # Controls
@@ -99,8 +99,7 @@ function breakout(control=keyboard_action; autorestart=true, speed=1.0, max_step
                 break  # Exit if game over and no autorestart
             end
             
-            # Render current state
-            render_display(game_state, game_counter)
+            display(game_state, game_counter)
             
             # Control frame rate based on elapsed time
             if speed !== nothing
