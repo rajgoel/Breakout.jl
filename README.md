@@ -13,7 +13,7 @@ A simple Breakout clone for fun and reinforcement learning on internal game stat
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/rajgoel/Breakout.jl")
+Pkg.add("Breakout")
 ```
 
 ## Game
