@@ -58,7 +58,7 @@ To create a custom controller, check out the controller implementations in the `
 
 ### Main Functions
 
-- `breakout(control_func=nothing; autorestart=true, speed=1.0, max_steps=nothing)` - Launch the game
+- `breakout(control_func=keyboard_action;autorestart=true, speed=1.0, max_steps=nothing)` - Launch the game
 - `BreakoutEnv(; frame_skip=4, max_steps=20000, representation=:full)` - Create RL environment
 
 ## State Representations for RL Training
