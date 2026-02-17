@@ -7,7 +7,7 @@ A simple Breakout clone for fun and reinforcement learning on internal game stat
 - Interactive gameplay with keyboard control (← and →).
 - Automatic gameplay with heuristic control.
 - Automatic gameplay with custom control.
-- CommonRLInterface for learning with different state representations
+- CommonRLInterface for learning with different state representations.
 
 ## Installation
 
