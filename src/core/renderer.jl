@@ -6,41 +6,39 @@ const SCALE_FACTOR = 4
 const WINDOW_WIDTH = GAME_WIDTH * SCALE_FACTOR
 const WINDOW_HEIGHT = GAME_HEIGHT * SCALE_FACTOR
 
-# Module-level variables
-window = nothing
-renderer = nothing
+# Module-level SDL handles (typed so calls stay statically dispatched for juliac --trim)
+const window_ref = Ref{Ptr{SDL_Window}}(C_NULL)
+const renderer_ref = Ref{Ptr{SDL_Renderer}}(C_NULL)
 
 """
 Create SDL window for game display.
 """
 function create_window()
-    global window, renderer
     @assert SDL_Init(SDL_INIT_EVERYTHING) == 0 "error initializing SDL: $(unsafe_string(SDL_GetError()))"
     
-    window = SDL_CreateWindow("Breakout", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)
+    window = window_ref[] = SDL_CreateWindow("Breakout", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)
+    renderer = renderer_ref[] = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)
     
     # Set logical size for automatic scaling and centering
     SDL_RenderSetLogicalSize(renderer, GAME_WIDTH, GAME_HEIGHT)
     
-    println("Window created.")
+    println(Core.stdout, "Window created.")
 end
 
 """
 Close SDL window and cleanup resources.
 """
 function close_window()
-    global window, renderer
-    if renderer !== nothing
-        SDL_DestroyRenderer(renderer)
-        renderer = nothing
+    if renderer_ref[] != C_NULL
+        SDL_DestroyRenderer(renderer_ref[])
+        renderer_ref[] = C_NULL
     end
-    if window !== nothing
-        SDL_DestroyWindow(window)
-        window = nothing
+    if window_ref[] != C_NULL
+        SDL_DestroyWindow(window_ref[])
+        window_ref[] = C_NULL
     end
     SDL_Quit()
-    println("Window closed.")
+    println(Core.stdout, "Window closed.")
 end
 
 """
@@ -65,6 +63,7 @@ end
 Render game state to SDL window.
 """
 function display(game_state, current_game)
+    renderer = renderer_ref[]
     # 1. Clear the screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255)  # Black background
     SDL_RenderClear(renderer)

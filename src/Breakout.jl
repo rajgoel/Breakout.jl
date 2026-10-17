@@ -6,7 +6,7 @@ Contains all core functions and control systems for the Breakout game.
 module Breakout
 
 # Game runner dependencies
-using FileIO, Images, Colors, SimpleDirectMediaLayer, CommonRLInterface                      
+using Colors, SimpleDirectMediaLayer, CommonRLInterface
 
 # Include all game files
 include("core/game.jl")
@@ -51,7 +51,7 @@ breakout(Breakout.heuristic_action, speed=nothing)
 ```
 """
 function breakout(control=keyboard_action; autorestart=true, speed=1.0, max_steps=nothing, game_counter=1)
-    println("🎮 Starting Breakout, press ESC to stop.")
+    println(Core.stdout, "🎮 Starting Breakout, press ESC to stop.")
     
     # Create game state instance for this play session
     game_state = GameState()
@@ -116,7 +116,7 @@ function breakout(control=keyboard_action; autorestart=true, speed=1.0, max_step
         close_window()
     end
     
-    println("Game ended")
+    println(Core.stdout, "Game ended")
 end
 
 end # module Breakout

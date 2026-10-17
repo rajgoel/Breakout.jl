@@ -96,7 +96,7 @@ Draw a multi-digit score using bitmap font rendering.
 - `scale`: Scaling factor for digits
 - `spacing`: Horizontal spacing between digits
 """
-function draw_score(pixel_callback, score_value, x, y, scale=2, spacing=4)
+function draw_score(pixel_callback::F, score_value, x, y, scale=2, spacing=4) where {F}
     score_str = string(score_value)
     
     for (i, char) in enumerate(score_str)

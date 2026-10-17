@@ -117,6 +117,18 @@ env = BreakoutEnv(discrete=false)
 actions = RL.actions(env)  # Returns (-1, 1)
 ```
 
+## Standalone App
+
+A keyboard-controlled executable can be built with [JuliaC](https://github.com/JuliaLang/JuliaC.jl) (Julia ≥ 1.12):
+
+```bash
+julia -e 'using Pkg; Pkg.Apps.add("JuliaC")'
+juliac --output-exe breakout --bundle build --trim=unsafe-warn --experimental --project=. app/breakout.jl
+build/bin/breakout
+```
+
+`--trim=safe` is not possible yet because some JLLs pulled in by `SDL2_jll` (`SBC_jll`, `SpeexDSP_jll`, `libasyncns_jll`) use untyped globals in their `__init__`. The `build/` directory is self-contained and can be copied to another Linux machine.
+
 ## License
 
 MIT License

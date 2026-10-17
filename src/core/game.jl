@@ -31,7 +31,7 @@ Struct representing a brick in the game state
 """
 struct Brick
     rect::Rect
-    color
+    color::RGB{Float64}
     points::Int
 end
 
